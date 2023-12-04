@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { nanoid } from "nanoid";
-import ModalCarItem from "../../components/ModalCarItem";
-import { selectCars } from "../../redux/selectors";
-import { getCars } from "../../redux/cars/carsOperations";
-import sprite from "../../assets/sprite.svg";
+import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { nanoid } from 'nanoid';
+import ModalCarItem from '../../components/ModalCarItem';
+import { selectCars } from '../../redux/selectors';
+import { getCars } from '../../redux/cars/carsOperations';
+import sprite from '../../assets/sprite.svg';
 import {
   CarItemsWrapperStyled,
   CarItemStyled,
@@ -20,11 +20,11 @@ import {
   LoadMoreStyled,
   HeartIconStyled,
   ImageWrapperStyled,
-} from "./CatalogPage.styled";
-import ModalContent from "../../components/ModalContent/ModalContent";
-import CarFilters from "../../components/CarFilters/CarFilters";
-import { onPageChange } from "../../redux/cars/carsOperations";
-import Navigation from "../../components/Navigation";
+} from './CatalogPage.styled';
+import ModalContent from '../../components/ModalContent/ModalContent';
+import CarFilters from '../../components/CarFilters/CarFilters';
+import { onPageChange } from '../../redux/cars/carsOperations';
+import Navigation from '../../components/Navigation';
 
 const CatalogPage = () => {
   const carsList = useSelector(selectCars);
@@ -32,9 +32,14 @@ const CatalogPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [page, setPage] = useState(1);
   const [clickedCarId, setClickedCarId] = useState(null);
+  const [favorite, setFavorite] = useState(false);
+
+  const toggleIcon = () => {
+    setFavorite(prevState => !prevState);
+  };
 
   const toggleModal = () => {
-    setModalOpen((prevState) => !prevState);
+    setModalOpen(prevState => !prevState);
   };
 
   const dispatch = useDispatch();
@@ -49,15 +54,12 @@ const CatalogPage = () => {
 
   const onLoadMore = () => {
     setPage(page + 1);
-    console.log("page", page);
   };
 
-  const onCarItemClick = (carID) => {
+  const onCarItemClick = carID => {
     setClickedCarId(carID);
     toggleModal();
   };
-
-  // const carID = nanoid();
 
   return (
     <>
@@ -92,15 +94,25 @@ const CatalogPage = () => {
                         <use href={`${sprite}#icon-auto`} />
                       </svg>
                     )}
-                    <HeartIconStyled>
-                      <use href={`${sprite}#icon-heart`} />
-                    </HeartIconStyled>
+                    {favorite && id === clickedCarId ? (
+                      <button onClick={(toggleIcon, () => onCarItemClick(id))}>
+                        <HeartIconStyled>
+                          <use href={`${sprite}#icon-active`} />
+                        </HeartIconStyled>
+                      </button>
+                    ) : (
+                      <button onClick={(toggleIcon, () => onCarItemClick(id))}>
+                        <HeartIconStyled>
+                          <use href={`${sprite}#icon-heart`} />
+                        </HeartIconStyled>
+                      </button>
+                    )}
                   </ImageWrapperStyled>
 
                   <TextWrapperStyled>
                     <TitleWrapperStyled>
                       <p>
-                        {make} <AccentColStyled>{model}</AccentColStyled>,{" "}
+                        {make} <AccentColStyled>{model}</AccentColStyled>,{' '}
                         {year}
                       </p>
 
@@ -109,10 +121,10 @@ const CatalogPage = () => {
 
                     <InfoWrapperStyled>
                       <InfoItemStyled>
-                        {address.split(",").splice(1, 1)}
+                        {address.split(',').splice(1, 1)}
                       </InfoItemStyled>
                       <InfoItemStyled>
-                        {address.split(",").splice(2, 1)}
+                        {address.split(',').splice(2, 1)}
                       </InfoItemStyled>
                       <InfoItemStyled>{rentalCompany}</InfoItemStyled>
                     </InfoWrapperStyled>
