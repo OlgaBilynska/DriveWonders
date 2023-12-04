@@ -1,13 +1,17 @@
 {
   "files": {
-    "main.css": "/DriveWonders/static/css/main.7acaea2f.css",
-    "main.js": "/DriveWonders/static/js/main.9b371e83.js",
+    "main.css": "/DriveWonders/static/css/main.f9884e32.css",
+    "main.js": "/DriveWonders/static/js/main.55c19849.js",
+    "static/js/787.6b7abe35.chunk.js": "/DriveWonders/static/js/787.6b7abe35.chunk.js",
+    "static/media/car_background.jpg": "/DriveWonders/static/media/car_background.8b47a3373a55fe8184e3.jpg",
+    "static/media/sprite.svg": "/DriveWonders/static/media/sprite.8ec92338f9144dff5fece67209cc7505.svg",
     "index.html": "/DriveWonders/index.html",
-    "main.7acaea2f.css.map": "/DriveWonders/static/css/main.7acaea2f.css.map",
-    "main.9b371e83.js.map": "/DriveWonders/static/js/main.9b371e83.js.map"
+    "main.f9884e32.css.map": "/DriveWonders/static/css/main.f9884e32.css.map",
+    "main.55c19849.js.map": "/DriveWonders/static/js/main.55c19849.js.map",
+    "787.6b7abe35.chunk.js.map": "/DriveWonders/static/js/787.6b7abe35.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.7acaea2f.css",
-    "static/js/main.9b371e83.js"
+    "static/css/main.f9884e32.css",
+    "static/js/main.55c19849.js"
   ]
 }
