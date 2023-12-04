@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { nanoid } from 'nanoid';
-import ModalCarItem from '../../components/ModalCarItem';
-import { selectCars } from '../../redux/selectors';
-import { getCars } from '../../redux/cars/carsOperations';
-import sprite from '../../assets/sprite.svg';
+import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { nanoid } from "nanoid";
+import ModalCarItem from "../../components/ModalCarItem";
+import { selectCars, selectFavoriteCars } from "../../redux/selectors";
+
+import sprite from "../../assets/sprite.svg";
 import {
   CarItemsWrapperStyled,
   CarItemStyled,
@@ -20,45 +20,73 @@ import {
   LoadMoreStyled,
   HeartIconStyled,
   ImageWrapperStyled,
-} from './CatalogPage.styled';
-import ModalContent from '../../components/ModalContent/ModalContent';
-import CarFilters from '../../components/CarFilters/CarFilters';
-import { onPageChange } from '../../redux/cars/carsOperations';
-import Navigation from '../../components/Navigation';
+  BtnHeartStyled,
+} from "../CatalogPage/CatalogPage.styled";
+
+import ModalContent from "../../components/ModalContent/ModalContent";
+import CarFilters from "../../components/CarFilters/CarFilters";
+import { onPageChange } from "../../redux/cars/carsOperations";
+import Navigation from "../../components/Navigation";
+import {
+  addFavorite,
+  deleteFavorite,
+  getFavorite,
+} from "../../redux/favorites/favoritesOperations";
 
 const CatalogPage = () => {
+  const dispatch = useDispatch();
   const carsList = useSelector(selectCars);
+  const favoriteCars = useSelector(selectFavoriteCars);
 
   const [modalOpen, setModalOpen] = useState(false);
-  const [page, setPage] = useState(1);
+  const [page, setPage] = useState(0);
   const [clickedCarId, setClickedCarId] = useState(null);
-  const [favorite, setFavorite] = useState(false);
 
-  const toggleIcon = () => {
-    setFavorite(prevState => !prevState);
+  const isFavoriteCar = (carId) => {
+    const car = favoriteCars.find((car) => car.id === carId);
+    return car;
+  };
+
+  const toggleIcon = (carId) => {
+    const foundFavCar = favoriteCars.find((car) => car.id === carId);
+
+    if (foundFavCar) {
+      dispatch(deleteFavorite(foundFavCar._id));
+    } else {
+      const chosenFavCar = carsList.find((car) => car.id === carId);
+      dispatch(addFavorite(chosenFavCar));
+    }
   };
 
   const toggleModal = () => {
-    setModalOpen(prevState => !prevState);
+    setModalOpen((prevState) => !prevState);
   };
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    dispatch(getCars());
+    dispatch(getFavorite());
   }, [dispatch]);
 
   useEffect(() => {
-    dispatch(onPageChange(page));
+    if (page === 0) {
+      return;
+    } else {
+      dispatch(onPageChange(page));
+    }
   }, [dispatch, page]);
 
   const onLoadMore = () => {
     setPage(page + 1);
   };
 
-  const onCarItemClick = carID => {
+  const onCarItemClick = (carID) => {
     setClickedCarId(carID);
     toggleModal();
+  };
+
+  const onHeartClick = (carID) => {
+    setClickedCarId(carID);
+    toggleIcon(carID);
+    isFavoriteCar(carID);
   };
 
   return (
@@ -94,25 +122,33 @@ const CatalogPage = () => {
                         <use href={`${sprite}#icon-auto`} />
                       </svg>
                     )}
-                    {favorite && id === clickedCarId ? (
-                      <button onClick={(toggleIcon, () => onCarItemClick(id))}>
+                    {isFavoriteCar(id) ? (
+                      <BtnHeartStyled
+                        onClick={() => {
+                          onHeartClick(id);
+                        }}
+                      >
                         <HeartIconStyled>
                           <use href={`${sprite}#icon-active`} />
                         </HeartIconStyled>
-                      </button>
+                      </BtnHeartStyled>
                     ) : (
-                      <button onClick={(toggleIcon, () => onCarItemClick(id))}>
+                      <BtnHeartStyled
+                        onClick={() => {
+                          onHeartClick(id);
+                        }}
+                      >
                         <HeartIconStyled>
                           <use href={`${sprite}#icon-heart`} />
                         </HeartIconStyled>
-                      </button>
+                      </BtnHeartStyled>
                     )}
                   </ImageWrapperStyled>
 
                   <TextWrapperStyled>
                     <TitleWrapperStyled>
                       <p>
-                        {make} <AccentColStyled>{model}</AccentColStyled>,{' '}
+                        {make} <AccentColStyled>{model}</AccentColStyled>,{" "}
                         {year}
                       </p>
 
@@ -121,10 +157,10 @@ const CatalogPage = () => {
 
                     <InfoWrapperStyled>
                       <InfoItemStyled>
-                        {address.split(',').splice(1, 1)}
+                        {address.split(",").splice(1, 1)}
                       </InfoItemStyled>
                       <InfoItemStyled>
-                        {address.split(',').splice(2, 1)}
+                        {address.split(",").splice(2, 1)}
                       </InfoItemStyled>
                       <InfoItemStyled>{rentalCompany}</InfoItemStyled>
                     </InfoWrapperStyled>

@@ -3,7 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-const toastError = (text) => {
+export const toastError = (text) => {
   toast.error(text, {
     position: "top-center",
     autoClose: 7000,
@@ -16,7 +16,7 @@ const toastError = (text) => {
   });
 };
 
-export const instance = axios.create({
+const instance = axios.create({
   baseURL: "https://6568bbf19927836bd9755827.mockapi.io/api/cars",
 });
 
@@ -35,7 +35,6 @@ export const getCars = createAsyncThunk("cars/getCars", async (_, thunkAPI) => {
 export const onPageChange = createAsyncThunk(
   "cars/loadMore",
   async (page, thunkAPI) => {
-    console.log("load more");
     try {
       page = page + 1;
       const url = `/adverts?&page=${page}&limit=12`;
@@ -52,16 +51,3 @@ export const onPageChange = createAsyncThunk(
     }
   }
 );
-
-// export const getCarById = createAsyncThunk(
-//   "cars/getCarsById",
-//   async (_, thunkAPI) => {
-//     try {
-//       const { data } = await instance.get(`adverts/:id`);
-//       return data;
-//     } catch (e) {
-//       toastError(`Oops! Something went wrong! ${e.response.data}`);
-//       return thunkAPI.rejectWithValue(e.message);
-//     }
-//   }
-// );
